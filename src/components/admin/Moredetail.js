@@ -149,7 +149,7 @@ export default function Moredetail({seeMore}) {
         xmlns="http://www.w3.org/2000/svg"
         xmlnsXlink="http://www.w3.org/1999/xlink"
       >
-        <title>telegram</title>
+        <title>telegram </title>
         <g stroke="none" strokeWidth={1} fill="none" fillRule="evenodd">
           <g
             transform="translate(-2020.000000, -442.000000)"

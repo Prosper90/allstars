@@ -208,7 +208,7 @@ export default function PlanetsPage() {
       const getp = await fetch('http://192.168.8.100:8000/projects', {
       method: 'GET',
           headers: {
-              'Content-Type': 'application/json',
+              'Content-Type':'application/json',
           },
           });
       const valueGotten = await getp.json()
@@ -238,7 +238,7 @@ export default function PlanetsPage() {
 
   useEffect(() => {
 
-  console.log("Use effect called")
+  console.log("Use effect calllgit ed")
   getProjects();
 
   }, [])
