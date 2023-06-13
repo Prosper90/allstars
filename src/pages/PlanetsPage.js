@@ -41,6 +41,8 @@ export default function PlanetsPage() {
 	frameLoop: "always",
 });
  
+ /*
+
  const planetsMap = [
    {
     name: "mecury",
@@ -182,7 +184,7 @@ export default function PlanetsPage() {
       PlanetAttach: 4,
     },
   ]
-
+ */
 
 
 
@@ -196,14 +198,39 @@ export default function PlanetsPage() {
   const[getscene, setGetScene] = useState();
   const [currentDetails, setCurrentDetails] = useState();
   const [openModal, setOpenModal] = useState(false);
+  const [TokensDetails, SetTokensDetails] = useState();
 
 
   const controlsRef = useRef();
 
 
+  const getProjects = async () => {
+      const getp = await fetch('http://192.168.8.100:8000/projects', {
+      method: 'GET',
+          headers: {
+              'Content-Type': 'application/json',
+          },
+          });
+      const valueGotten = await getp.json()
 
-  const moreInfo = (data) => {
+          console.log(valueGotten, "checking");
+
+        SetTokensDetails(valueGotten);
+  }
+
+
+  const moreInfo = async (data) => {
     console.log(data);
+    const updateClick = await fetch('http://192.168.8.100:8000/clicks', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+        body: JSON.stringify({
+          id: data._id
+        }),
+    });
+    console.log(updateClick);
     setCurrentDetails(data);
     setOpenModal(true);
   }
@@ -212,6 +239,7 @@ export default function PlanetsPage() {
   useEffect(() => {
 
   console.log("Use effect called")
+  getProjects();
 
   }, [])
 
@@ -221,7 +249,6 @@ export default function PlanetsPage() {
       <div className="relative h-screen z-20">
        <Maincanvas 
         TokensDetails={TokensDetails}
-        planetsMap={planetsMap}
         holdCam={holdCam}
         setCam={setCam}
         controlsRef={controlsRef}
@@ -230,7 +257,7 @@ export default function PlanetsPage() {
        />
       </div>
         {/* Render the modal when showModal is true */}
-        {openModal && <Modal currentDetails={currentDetails} setOpenModal={setOpenModal} planetsMap={planetsMap}   />}
+        {openModal && <Modal currentDetails={currentDetails} setOpenModal={setOpenModal} />}
 
     </div>
   )

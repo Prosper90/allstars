@@ -10,10 +10,10 @@ const DetailsCanvas = ({ details, planetsMap }) => {
 
   //const texture = useLoader(TextureLoader, planetsMap[details.PlanetAttach].image);
   //const ringTexture = useLoader(TextureLoader, planetsMap[details.PlanetAttach].rings);
-  const texture = new THREE.TextureLoader().load(planetsMap[details.PlanetAttach].image);
-  const ringTexture = new THREE.TextureLoader().load(planetsMap[details.PlanetAttach].rings);
+  const texture = new THREE.TextureLoader().load(details.PlanetAttach.image);
+  const ringTexture = new THREE.TextureLoader().load(details.PlanetAttach.rings);
  
- console.log(details, planetsMap, "called");
+ console.log(details, "called");
 
 
     return (
@@ -41,7 +41,7 @@ const DetailsCanvas = ({ details, planetsMap }) => {
                         <sphereGeometry args={[3, 50, 50]} />
                         <meshStandardMaterial map={texture} />
             </mesh>
-            {planetsMap[details.PlanetAttach].name === "saturn" && (
+            { details.PlanetAttach === "saturn" && (
                 <mesh>
                 <torusGeometry args={[4, 0.5, 2, 10000]} rotation={[1.8, 0, 0]} />
                     <meshLambertMaterial

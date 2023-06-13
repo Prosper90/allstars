@@ -34,10 +34,16 @@ export default function Planets({ distance, speed, index, texture, moreInfo, dat
       });
    */
 
-  const terrainTexture = useTexture(texture.image);
+  const terrainTexture = useTexture(texture);
   const planetRef = useRef();
   const initialAngle = useMemo(() => Math.random() * Math.PI * 2, []);
 
+
+  const handleImageClick = (event) => {
+    console.log("working check")
+    event.stopPropagation(); // Prevent event propagation
+    //planetRef.current.dispatchEvent(new Event('click')); // Forward click event to the group
+  };
 
   // Use useMemo to create the position of the planet based on its distance from the sun
   const initialPosition = useMemo(() => {
@@ -65,21 +71,13 @@ export default function Planets({ distance, speed, index, texture, moreInfo, dat
   });
 
   return (
-    <group
+    <mesh
         ref={planetRef}
         scale={2}
         position={initialPosition}
         onClick={() => moreInfo(data)}
+
     >
-      {/* HTML content ≈ */}
-      <Html scale={100} rotation={[Math.PI / 2, 0, 0]}  >
-          {/*<h3>{data.tokenName}</h3>*/}
-          <div className="w-[35px] h-auto flex justify-center items-center rounded">
-          <img src={data.img_url} alt={data.tokenName} className='w-full h-full' />
-          </div>
-          
-      </Html>
-     
 
       <mesh>
         {/* 
@@ -92,8 +90,17 @@ export default function Planets({ distance, speed, index, texture, moreInfo, dat
         <sphereGeometry args={[3, 50, 50]} />
         <meshStandardMaterial map={terrainTexture} />
       </mesh>
-
-    </group>
+      {/* HTML content ≈ */}
+      <Html scale={100} rotation={[Math.PI / 2, 0, 0]}
+        onClick={() => moreInfo(data)}
+        >
+          {/*<h3>{data.tokenName}</h3>*/}
+          <div className="w-[35px] h-auto flex justify-center items-center rounded-[100px]">
+            <img src={data.img_url} alt={data.tokenName} className='w-full h-full rounded-[100px]' />
+          </div>
+          
+      </Html>
+    </mesh>
 
 
   )

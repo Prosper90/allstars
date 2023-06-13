@@ -28,7 +28,7 @@ import { useTexture } from "@react-three/drei";
         //controlsRef={controlsRef}
         //moreInfo={moreInfo}
 
-export function Maincanvas({setCam, setGetScene, TokensDetails, planetsMap, holdCam, controlsRef, moreInfo}) {
+export function Maincanvas({setCam, setGetScene, TokensDetails, holdCam, controlsRef, moreInfo}) {
   return (
     <Suspense fallback={null}>
         <Canvas
@@ -50,7 +50,7 @@ export function Maincanvas({setCam, setGetScene, TokensDetails, planetsMap, hold
             penumbra={1}
             castShadow
           />
-         {TokensDetails.map((data, index) => {
+         {TokensDetails?.map((data, index) => {
 
           const x = index + 1.5
          
@@ -59,15 +59,16 @@ export function Maincanvas({setCam, setGetScene, TokensDetails, planetsMap, hold
           return(
             <Planets
               index={index}
+              key={index}
               //eachPlanet={eachPlanet} 
               //planetPosition={space}
               //planetSize={[2, 70, 70]}
               //planetrad={20 * x}
             //getindex={getindex}
             //rotation-x={rotationX}
-            distance={20 * x}
+            distance={27 * x}
             speed={0.05}
-            texture={planetsMap[data.PlanetAttach]}
+            texture={data.planet_url}
             moreInfo={moreInfo}
             data={data}
             />
