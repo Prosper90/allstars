@@ -1,11 +1,13 @@
-import React from 'react'
+import React from 'react';
+import News from './News';
 
 function Projects({ details }) {
   return (
-    <>
-      <div className='text-[#67748E] flex flex-col justify-start  w-100'>
+    <div className=' h-[100%] overflow-y-auto overflow-x-hidden'>
 
-        <div className="flex justify-between items-start p-2 w-[100%] bg--700 mb-1 ">
+      <div className='text-[#67748E] flex flex-col justify-start   w-[100%]'>
+
+        <div className="flex justify-between items-start p-2 w-[100%] h-[] bg--700 mb-1">
           <img src={details.img_url} alt='img-logo' className='rounded w-28 h-28' />
           <button className=' cursor-pointer p-[7px] rounded-md w-20 bg-gradient-to-tl border border-white from-purple-700 to-pink-500 hover:shadow-soft-2xl hover:scale-102 text-sm text-white'>Vote</button>
         </div>
@@ -15,30 +17,34 @@ function Projects({ details }) {
             <div className="text-xs flex items-center gap-[2px] flex-none">
                 <div className="">CA:</div> 
                 <div className="bg--700 shadow-sm border flex text-center rounded-md py-1 text-xs px-3">
-                    <img className='h-5' src="/1027.png" alt="" />
-                    0xdac17...
+                {details.Contract_address ?
+                     <>
+                      <img className='h-3' src="/1027.png" alt="" />
+                      {details.Contract_address}
+                     </>
+                     : 
+                     "NA"
+                     }
                 </div>
             </div>
             <div className="text-xs flex items-center gap-[2px] flex-none">
                 <div className="">Votes:</div> 
                 <div className="bg--700 shadow-sm border flex items-center text-center rounded-md py-1 text-xs px-3">
-                  <img className='h-5' src="/avatar.svg" alt="" />
-                  1290
+                  <img className='h-3' src="/avatar.svg" alt="" />
+                   {details.votes}
                 </div>
             </div>
             <div className="text-xs flex items-center gap-[2px] flex-none">
-                <div className="">Market Cap:</div> 
+                <div className="">clicks:</div> 
                 <div className="bg-puple-700 shadow-sm border flex items-center text-center rounded-md py-1 text-xs px-3">
-                  <div className="">$</div>
-                  1290
+                  {details.clicks}
                 </div>
             </div>
 
             <div className="text-xs flex items-center gap-[2px] flex-none">
                 <div className="">Audit:</div> 
                 <div className="bg-puple-700 shadow-sm border flex items-center text-center rounded-md py-1 text-xs px-3">
-                  <div className="">$</div>
-                  1290
+                   {details.audit ? details.audit : "NA"}
                 </div>
             </div>
 
@@ -49,8 +55,13 @@ function Projects({ details }) {
           {details.tokenDescription}
         </div>
 
+
       </div>
-    </>
+
+        <div className="mt-[20px]">
+          <News details={details} />
+        </div>
+    </div>
   )
 }
 

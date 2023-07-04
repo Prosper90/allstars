@@ -21,7 +21,7 @@ const login = async (e) => {
 
     e.preventDefault();
 
-    const loginUSer = await fetch('http://192.168.8.100:8000/login', {
+    const loginUSer = await fetch('https://web3planet.bintfinance.org/login', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

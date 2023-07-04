@@ -6,12 +6,12 @@ import * as THREE from 'three';
 import PlanetOverlay from "./PlanetOverlay";
 
 
-const DetailsCanvas = ({ details, planetsMap }) => {
+const DetailsCanvas = ({ details, textureSelected }) => {
 
   //const texture = useLoader(TextureLoader, planetsMap[details.PlanetAttach].image);
   //const ringTexture = useLoader(TextureLoader, planetsMap[details.PlanetAttach].rings);
-  const texture = new THREE.TextureLoader().load(details.PlanetAttach.image);
-  const ringTexture = new THREE.TextureLoader().load(details.PlanetAttach.rings);
+  const texture = new THREE.TextureLoader().load(textureSelected);
+  const ringTexture = new THREE.TextureLoader().load("/saturnrings.png");
  
  console.log(details, "called");
 
@@ -32,6 +32,7 @@ const DetailsCanvas = ({ details, planetsMap }) => {
             <OrbitControls enableZoom={false} autoRotate autoRotateSpeed={0.5} />
             {/*<ambientLight intensity={details.name === "Sun" ? 1 : 0.1} />*/}
             <spotLight position={[5, 5, 10]} intensity={1} />
+            <ambientLight intensity={0.1} />
             <mesh>
             {/*
                 <Sphere args={[2, 100, 100]} scale={1.4}>
@@ -41,7 +42,7 @@ const DetailsCanvas = ({ details, planetsMap }) => {
                         <sphereGeometry args={[3, 50, 50]} />
                         <meshStandardMaterial map={texture} />
             </mesh>
-            { details.PlanetAttach === "saturn" && (
+            { details.planet_name === "saturn" && (
                 <mesh>
                 <torusGeometry args={[4, 0.5, 2, 10000]} rotation={[1.8, 0, 0]} />
                     <meshLambertMaterial

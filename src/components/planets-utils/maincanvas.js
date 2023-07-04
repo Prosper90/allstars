@@ -16,9 +16,10 @@ import { Canvas, useThree, useFrame } from "@react-three/fiber";
 //import { angleToradians } from "../utils/angles";
 import * as THREE from "three";
 import Planets from './Planent';
-import { OrbitControls } from "@react-three/drei";
+import { OrbitControls, PerspectiveCamera } from "@react-three/drei";
 import ZoomCursorControls from "./ZoomCursorControls"
 import { useTexture } from "@react-three/drei";
+import Preloader from '../component-utils/Preloader';
 
 
         //TokensDetails={TokensDetails}
@@ -28,8 +29,11 @@ import { useTexture } from "@react-three/drei";
         //controlsRef={controlsRef}
         //moreInfo={moreInfo}
 
-export function Maincanvas({setCam, setGetScene, TokensDetails, holdCam, controlsRef, moreInfo}) {
+export function Maincanvas({ setLoading, loading, setCam, setGetScene, TokensDetails, holdCam, controlsRef, moreInfo, planetsMap}) {
   return (
+    <>
+
+    {loading && <Preloader />}
     <Suspense fallback={null}>
         <Canvas
           {...{
@@ -40,7 +44,8 @@ export function Maincanvas({setCam, setGetScene, TokensDetails, holdCam, control
            //onClick={ handleClick }
            //onWheel={handleWheel}
         >
-          <MyCameraReactsToStateChanges setCam={setCam} setGetScene={setGetScene} />
+          {/* <MyCameraReactsToStateChanges setCam={setCam} setGetScene={setGetScene} /> */}
+          <PerspectiveCamera makeDefault position={[50, 200, 50]} fov={60} aspect={window.innerWidth / window.innerHeight} />
           <ambientLight />
           <Stars />
           <spotLight
@@ -55,24 +60,23 @@ export function Maincanvas({setCam, setGetScene, TokensDetails, holdCam, control
           const x = index + 1.5
          
           const space = [x * 7, 0, 20];
-          console.log(space, "space") 
-          return(
-            <Planets
-              index={index}
-              key={index}
-              //eachPlanet={eachPlanet} 
-              //planetPosition={space}
-              //planetSize={[2, 70, 70]}
-              //planetrad={20 * x}
-            //getindex={getindex}
-            //rotation-x={rotationX}
-            distance={27 * x}
-            speed={0.05}
-            texture={data.planet_url}
-            moreInfo={moreInfo}
-            data={data}
-            />
-          )
+          const getTexture = planetsMap.find(planet => planet.name === data.planet_name)
+          console.log(data.planet_name, getTexture);
+          
+          if(data.approved) {
+            return(
+              <Planets
+                index={index}
+                key={index}
+                distance={27 * x}
+                speed={0.05}
+                texture={getTexture.image}
+                moreInfo={moreInfo}
+                data={data}
+              />
+            )
+          }
+
          })}
 
           {/*<OrbitControls ref={controlsRef}  />*/}
@@ -87,6 +91,7 @@ export function Maincanvas({setCam, setGetScene, TokensDetails, holdCam, control
 
       </Suspense>
 
+      </>
   )
 }
 

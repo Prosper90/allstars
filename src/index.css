@@ -44,3 +44,18 @@ section {
 		/* overflow: hidden; */
 	}
 }
+
+
+#mini-planet {
+	animation: circularMotion 1s infinite linear;
+	transform-origin: 50% 50%;
+}
+
+@keyframes circularMotion {
+	0% {
+	  transform: rotate(0deg);
+	}
+	100% {
+	  transform: rotate(360deg);
+	}
+  }

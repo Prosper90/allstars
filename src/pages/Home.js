@@ -1,12 +1,14 @@
 import React, {useEffect, useState} from 'react'
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router-dom';
+import Preloader from '../components/component-utils/Preloader';
 
-function Home() {
+function Home({ setLoading, loading }) {
 
  const [visited, setVisited] = useState(false);
+ const [isLoading, setIsLoading] = useState(true);
 
   const addInfo = async () => {
-    const upload = await fetch('http://192.168.8.100:8000/visitors', {
+    const upload = await fetch('https://web3planet.bintfinance.org/visitors', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -22,12 +24,19 @@ function Home() {
     if(!visited) {
         addInfo();
     }
+
+    setTimeout(() => {
+        setIsLoading(false); // Set isLoading to false after the delay
+      }, 3000);
   }, [])
   
 
 
     return (
-        < >
+        < > 
+            { isLoading &&
+                <Preloader />
+            }
             <div className=" relative  h-screen md:h-screen flex flex-col justify-center items-center  md:bg-black">
             <div className=" absolute w-[100%] h-[100%] top-[0] left-[0] bg-[rgba(0,0,0,0.3)] z-[999]" style={{
                 background: 'rgba(0,0,0,0.5)'
@@ -37,20 +46,13 @@ function Home() {
                     loop
                     muted
                     playsInline
-                    style={{
-                        position: 'fixed',
-                        top: 0,
-                        left: 0,
-                        width: '100%',
-                        height: '100%',
-                        objectFit: 'cover',
-                    }}
+                    className='fixed w-full h-full top-[0] left-[0] object-contain md:object-cover'
                     >
                     <source src="/bgvid.mp4" type="video/mp4" />
                      {/* Add additional <source> elements for other video formats if needed */}
                     </video>
                  <nav>
-                   <div className="h-12 absolute top-8 left-8 rounded-2xl">
+                   <div className="h-12 absolute top-8 left-8 rounded-2xl z-[9999999]">
                      <img src="/photo_6010204748592036652_x.jpg" className='h-full w-full rounded-full' alt="" />
                    </div>
                  </nav>

@@ -2,8 +2,9 @@ import React, { useState, useEffect } from 'react'
 import { Stars } from '../components/planets-utils/maincanvas'
 import { Canvas } from '@react-three/fiber'
 import { Link } from 'react-router-dom'
+import Notifier from '../components/component-utils/Notifier'
 
-export default function AddProjectPage() {
+export default function AddProjectPage({setLoading, loading, notify, notifyType, notifyMsg, setNotify, setNotifyType, setNotifyMsg}) {
   const [formSwitch, setFormSwitch] = useState(0)
   const [counter, setCounter] = useState(1);
 
@@ -75,6 +76,7 @@ const [tokenName, setTokenName] = useState();
 
 const submitData = async (e) => {
   e.preventDefault();
+  setLoading(true);
   console.log(img_url, "checking state");
   console.log("check Running");
   const formdata = new FormData();
@@ -97,12 +99,22 @@ const submitData = async (e) => {
   console.log(formdata, "formdata check");
   
   try {
-    const upload = await fetch('http://192.168.8.100:8000/project', {
+    const upload = await fetch('https://web3planet.bintfinance.org/project', {
       method: 'POST',
       body: formdata,
     });
 
     console.log(upload, "upload");
+    if(!upload) {
+      setNotify(true);
+      setNotifyType("warn");
+      setNotifyMsg("Problems uploading data");
+    } else {
+      setNotify(true);
+      setNotifyType("success");
+      setNotifyMsg("Data Recieved and Would be Reviewed");
+    }
+    setLoading(false);
   } catch (error) {
     console.error(error);
   }
@@ -112,14 +124,33 @@ const submitData = async (e) => {
 
 
 useEffect(() => {
+    
+  
+    if(notify) {
+      setTimeout(() => {
+        setNotify(false);
+        setNotifyType("");
+        setNotifyMsg("");
+      }, 5000);
+     }
 
-}, [])
+
+}, [notify])
 
 
 
 
   return (
     <div className='h-screen relative'>
+
+    { notify &&
+        <Notifier
+          notify={notify}
+          notifyType={notifyType}
+          notifyMsg={notifyMsg}
+        />
+      }
+
       <Canvas
         {...{
           camera: { position: [50, 200, 50] },
@@ -144,7 +175,7 @@ useEffect(() => {
           <div className="bg-[00ff00]">
             <label className='font-medium text-white text-lg md:text-xl' htmlFor="">WHAT IS YOUR PROJECTS NAME</label>
             <input className='bg-transparent  border outline-none rounded-md w-full  p-2 text-white px-4 mt-3' type="text" placeholder='Enter project name here' 
-             name="tokenName" 
+             name="tokenName"
              defaultValue={tokenName}
              onChange={(e) => setTokenName(e.target.value)}
              />

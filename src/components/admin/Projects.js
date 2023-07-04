@@ -1,6 +1,20 @@
 import React from 'react'
 
-export default function Projects({setSeeMore, allProjects }) {
+export default function Projects({setSeeMore, allProjects, setSelected }) {
+
+  const getDate = (dataDate) => {
+    const formatted = new Date(dataDate);
+    return formatted.toLocaleDateString;
+  }
+
+  console.log(allProjects, "all projects");
+
+
+  const openMore = (data) => {
+    setSeeMore(data);
+    setSelected("moredetails");
+  }
+  
   return (
 <div className="flex flex-wrap -mx-3">
   <div className="flex-none w-full max-w-full px-3 mx-[21px]">
@@ -29,108 +43,64 @@ export default function Projects({setSeeMore, allProjects }) {
               </tr>
             </thead>
             <tbody>
-              <tr>
+              {allProjects?.map((data, index) => (
+                <tr key={index}>
                 <td className="p-2 align-middle bg-transparent border-b whitespace-nowrap shadow-transparent">
                   <div className="flex px-2 py-1">
                     <div>
                       <img
-                        src="../assets/img/team-2.jpg"
+                        src={data?.img_url}
                         className="inline-flex items-center justify-center mr-4 text-sm text-white transition-all duration-200 ease-soft-in-out h-9 w-9 rounded-xl"
                         alt="user1"
                       />
                     </div>
                     <div className="flex flex-col justify-center">
                       <h6 className="mb-0 text-sm leading-normal">
-                        John Michael
+                        {data?.tokenName}
                       </h6>
                       <p className="mb-0 text-xs leading-tight text-slate-400">
-                        john@creative-tim.com
+                        {data?.Contract_address}
                       </p>
                     </div>
                   </div>
                 </td>
                 <td className="p-2 align-middle bg-transparent border-b whitespace-nowrap shadow-transparent">
                   <p className="mb-0 text-xs font-semibold leading-tight">
-                    Manager
+                    {data?.tg}
                   </p>
                   <p className="mb-0 text-xs leading-tight text-slate-400">
-                    Organization
+                    {data?.website}
                   </p>
                 </td>
                 <td className="p-2 text-sm leading-normal text-center align-middle bg-transparent border-b whitespace-nowrap shadow-transparent">
-                  <span className="bg-gradient-to-tl from-green-600 to-lime-400 text-xs rounded-1.8 py-1.4 inline-block whitespace-nowrap text-center align-baseline font-bold uppercase leading-none text-white rounded px-[5px] py-[5px]">
-                    Ongoing
-                  </span>
+                  {
+                    data?.subscription ?
+                    <span className="bg-gradient-to-tl from-green-600 to-lime-400 text-xs rounded-1.8 py-1.4 inline-block whitespace-nowrap text-center align-baseline font-bold uppercase leading-none text-white rounded px-[5px] py-[5px]">
+                      Ongoing
+                    </span>
+                    :
+                    <span className="bg-gradient-to-tl from-slate-600 to-slate-300 text-xs rounded-1.8 py-1.4 inline-block whitespace-nowrap text-center align-baseline font-bold uppercase leading-none text-white rounded px-[5px] py-[5px]">
+                      Ended
+                    </span>
+                  }
+
                 </td>
                 <td className="p-2 text-center align-middle bg-transparent border-b whitespace-nowrap shadow-transparent">
                   <span className="text-xs font-semibold leading-tight text-slate-400">
-                    23/04/18
+                    {getDate(data.dateandtime)} 
                   </span>
                 </td>
                 <td className="p-2 align-middle bg-transparent border-b whitespace-nowrap shadow-transparent">
-                  <a
-                    href="javascript:;"
-                    className="text-xs font-semibold leading-tight text-slate-400"
+                  <div
+                    className="text-xs font-semibold leading-tight text-slate-400 cursor-pointer"
+                    onClick={() => openMore(data)}
                   >
                     {" "}
                     more{" "}
-                  </a>
-                </td>
-              </tr>
-              <tr>
-                <td className="p-2 align-middle bg-transparent border-b whitespace-nowrap shadow-transparent">
-                  <div className="flex px-2 py-1">
-                    <div>
-                      <img
-                        src="../assets/img/team-3.jpg"
-                        className="inline-flex items-center justify-center mr-4 text-sm text-white transition-all duration-200 ease-soft-in-out h-9 w-9 rounded-xl"
-                        alt="user2"
-                      />
-                    </div>
-                    <div className="flex flex-col justify-center">
-                      <h6 className="mb-0 text-sm leading-normal">
-                        Alexa Liras
-                      </h6>
-                      <p className="mb-0 text-xs leading-tight text-slate-400">
-                        alexa@creative-tim.com
-                      </p>
-                    </div>
                   </div>
                 </td>
-                <td className="p-2 align-middle bg-transparent border-b whitespace-nowrap shadow-transparent">
-                  <p className="mb-0 text-xs font-semibold leading-tight">
-                    Programator
-                  </p>
-                  <p className="mb-0 text-xs leading-tight text-slate-400">
-                    Developer
-                  </p>
-                </td>
-                <td className="p-2 text-sm leading-normal text-center align-middle bg-transparent border-b whitespace-nowrap shadow-transparent">
-                  <span className="bg-gradient-to-tl from-slate-600 to-slate-300 text-xs rounded-1.8 py-1.4 inline-block whitespace-nowrap text-center align-baseline font-bold uppercase leading-none text-white rounded px-[5px] py-[5px]">
-                    Ended
-                  </span>
-                </td>
-                <td className="p-2 text-center align-middle bg-transparent border-b whitespace-nowrap shadow-transparent">
-                  <span className="text-xs font-semibold leading-tight text-slate-400">
-                    11/01/19
-                  </span>
-                </td>
-                <td className="p-2 align-middle bg-transparent border-b whitespace-nowrap shadow-transparent">
-                  <a
-                    href="javascript:;"
-                    className="text-xs font-semibold leading-tight text-slate-400"
-                  >
-                    {" "}
-                    more{" "}
-                  </a>
-                </td>
               </tr>
-
-
-
-              
-
-
+              ))}
             </tbody>
           </table>
         </div>

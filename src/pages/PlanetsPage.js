@@ -32,7 +32,7 @@ import { animated, Globals, useSpring } from "@react-spring/three";
 
 
 
-export default function PlanetsPage() {
+export default function PlanetsPage({setLoading, loading}) {
 
 
   //const rotationX = useControl("Rotation X", { type: "number", spring: true });
@@ -41,7 +41,6 @@ export default function PlanetsPage() {
 	frameLoop: "always",
 });
  
- /*
 
  const planetsMap = [
    {
@@ -82,130 +81,20 @@ export default function PlanetsPage() {
 
 
 
-  const TokensDetails = [
-    {
-      id: 1,
-      tokenName: "token1",
-      tokenDescription: ` What is Lorem Ipsum? Lorem Ipsum
-                          is simply dummy text of the printing
-                          and typesetting industry. Lorem 
-                          Ipsum has been the industry's standard 
-                          dummy text ever since the 1500s, 
-                          when an unknown printer took a galley
-                          of type and scrambled it to make a 
-                          type specimen book. It has survived 
-                          not only five centuries, but also the
-                          leap into electronic typesetting`,
-      chain: "BNB",
-      img_url: "/Anon.jpg",
-      size: "",
-      votes: 30,
-      MC: 2500,
-      PlanetAttach: 0,
-    },
-    {
-      id: 2,
-      tokenName: "token2",
-      tokenDescription: "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquam, quam.",
-      chain: "BNB",
-      img_url: "/burning.jpg",
-      votes: 300,
-      MC: 2000,
-      PlanetAttach: 5,
-    },
-    {
-      id: 3,
-      tokenName: "token3",
-      tokenDescription: "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquam, quam.",
-      chain: "BNB",
-      img_url: "/horris.jpg",
-      votes: 20,
-      MC: 3000,
-      PlanetAttach: 7,
-    },
-    {
-      id: 4,
-      tokenName: "token4",
-      tokenDescription: "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquam, quam.",
-      chain: "BNB",
-      img_url: "/rabbit.jpg",
-      votes: 15,
-      MC: 7000,
-      PlanetAttach: 4,
-    },
-    {
-      id: 5,
-      tokenName: "token5",
-      tokenDescription: "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquam, quam.",
-      chain: "BNB",
-      img_url: "/roundbanana.jpg",
-      votes: 70,
-      MC: 500,
-      PlanetAttach: 2,
-    },
-    {
-      id: 6,
-      tokenName: "token6",
-      tokenDescription: "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquam, quam.",
-      chain: "BNB",
-      img_url: "/umbrella.jpg",
-      votes: 200,
-      MC: 1100,
-      PlanetAttach: 1,
-    },
-    {
-      id: 7,
-      tokenName: "token7",
-      tokenDescription: "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquam, quam.",
-      chain: "BNB",
-      img_url: "/bunnies.jpg",
-      votes: 206,
-      MC: 8000,
-      PlanetAttach: 0,
-    },
-    {
-      id: 8,
-      tokenName: "token8",
-      tokenDescription: "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquam, quam.",
-      chain: "BNB",
-      img_url: "img7",
-      votes: 206,
-      MC: 8000,
-      PlanetAttach: 6,
-    },
-    {
-      id: 9,
-      tokenName: "token9",
-      tokenDescription: "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquam, quam.",
-      chain: "BNB",
-      img_url: "img7",
-      votes: 206,
-      MC: 8000,
-      PlanetAttach: 4,
-    },
-  ]
- */
-
-
-
-
-
-
-
-
-
   const[holdCam, setCam] = useState();
   const[getscene, setGetScene] = useState();
   const [currentDetails, setCurrentDetails] = useState();
   const [openModal, setOpenModal] = useState(false);
   const [TokensDetails, SetTokensDetails] = useState();
+  const [textureSelected, setTextureSelected] = useState();
 
 
   const controlsRef = useRef();
 
 
   const getProjects = async () => {
-      const getp = await fetch('http://192.168.8.100:8000/projects', {
+    setLoading(true);
+      const getp = await fetch('https://web3planet.bintfinance.org/projects', {
       method: 'GET',
           headers: {
               'Content-Type':'application/json',
@@ -216,12 +105,13 @@ export default function PlanetsPage() {
           console.log(valueGotten, "checking");
 
         SetTokensDetails(valueGotten);
+        setLoading(false)
   }
 
 
-  const moreInfo = async (data) => {
+  const moreInfo = async (data, textureto) => {
     console.log(data);
-    const updateClick = await fetch('http://192.168.8.100:8000/clicks', {
+    const updateClick = await fetch('https://web3planet.bintfinance.org/clicks', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -233,6 +123,7 @@ export default function PlanetsPage() {
     console.log(updateClick);
     setCurrentDetails(data);
     setOpenModal(true);
+    setTextureSelected(textureto);
   }
 
 
@@ -254,10 +145,16 @@ export default function PlanetsPage() {
         controlsRef={controlsRef}
         moreInfo={moreInfo}
         setGetScene={setGetScene}
+        planetsMap={planetsMap}
+        loading={loading}
+        setLoading={setLoading}
        />
       </div>
         {/* Render the modal when showModal is true */}
-        {openModal && <Modal currentDetails={currentDetails} setOpenModal={setOpenModal} />}
+      <div className="relative h-screen p-20 flex justify-center items-center">
+        {openModal && <Modal currentDetails={currentDetails} setOpenModal={setOpenModal} textureSelected={textureSelected} />}
+      </div>
+        
 
     </div>
   )

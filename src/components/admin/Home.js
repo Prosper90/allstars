@@ -11,7 +11,7 @@ const openMore = (data) => {
     <div className="w-full px-6 py-6 mx-auto">
     <div className="flex flex-wrap -mx-3">
         <div className="w-full max-w-full px-3 mb-6 sm:w-1/2 sm:flex-none xl:mb-0 xl:w-1/4">
-        <div className="relative flex flex-col min-w-0 break-words bg-white shadow-soft-xl rounded-2xl bg-clip-border">
+        <div className="relative flex flex-col min-w-0 break-words bg-white shadow-hard-xl rounded-2xl bg-clip-border">
             <div className="flex-auto p-4">
             <div className="flex flex-row -mx-3">
                 <div className="flex-none w-2/3 max-w-full px-3">
@@ -21,9 +21,6 @@ const openMore = (data) => {
                     </p>
                     <h5 className="mb-0 font-bold">
                     $53,000
-                    <span className="leading-normal text-sm font-weight-bolder text-lime-500">
-                        +55%
-                    </span>
                     </h5>
                 </div>
                 </div>
@@ -47,9 +44,6 @@ const openMore = (data) => {
                     </p>
                     <h5 className="mb-0 font-bold">
                     {stats?.totalProjects}
-                    <span className="leading-normal text-sm font-weight-bolder text-lime-500">
-                        +3%
-                    </span>
                     </h5>
                 </div>
                 </div>
@@ -73,9 +67,6 @@ const openMore = (data) => {
                     </p>
                     <h5 className="mb-0 font-bold">
                     +{stats?.visitors}
-                    <span className="leading-normal text-red-600 text-sm font-weight-bolder">
-                        -2%
-                    </span>
                     </h5>
                 </div>
                 </div>
@@ -100,9 +91,6 @@ const openMore = (data) => {
                     </p>
                     <h5 className="mb-0 font-bold">
                     +{stats?.projectClicks}
-                    <span className="leading-normal text-sm font-weight-bolder text-lime-500">
-                        +5%
-                    </span>
                     </h5>
                 </div>
                 </div>
@@ -589,7 +577,7 @@ const openMore = (data) => {
                             <div className="flex px-2 py-1">
                             <div>
                                 <img
-                                src="../assets/img/small-logos/logo-xd.svg"
+                                src={data?.img_url}
                                 className="inline-flex items-center justify-center mr-4 text-white transition-all duration-200 ease-soft-in-out text-sm h-9 w-9 rounded-xl"
                                 alt="xd"
                                 />
@@ -657,7 +645,7 @@ const openMore = (data) => {
                     <div className="ml-11.252 pt-1.4 lg:max-w-120 relative -top-1.5 w-auto" key={index}>
                         <h6 className="mb-0 font-semibold leading-normal text-sm text-slate-700 flex">
                         <div>
-                            <img src="../assets/img/small-logos/logo-xd.svg" class="inline-flex items-center justify-center mr-2 text-white transition-all duration-200 ease-soft-in-out text-sm h-5 w-9 rounded-xl" alt="xd" />
+                            <img src={data?.img_url} class="inline-flex items-center justify-center mr-2 text-white transition-all duration-200 ease-soft-in-out text-sm h-5 w-9 rounded-xl" alt="xd" />
                         </div>
                             <div className="">{data.tokenName}</div>
                         </h6>
