@@ -29,6 +29,8 @@ import ZoomCursorControls from "../components/planets-utils/ZoomCursorControls"
 import { useTexture,  RenderTexture  } from "@react-three/drei";
 import Modal from '../components/planets-utils/Modal';
 import { animated, Globals, useSpring } from "@react-spring/three";
+import Filter from '../components/planets-utils/Filter';
+import Paginationbutton from '../components/planets-utils/Paginationbutton';
 
 
 
@@ -85,16 +87,19 @@ export default function PlanetsPage({setLoading, loading}) {
   const[getscene, setGetScene] = useState();
   const [currentDetails, setCurrentDetails] = useState();
   const [openModal, setOpenModal] = useState(false);
-  const [TokensDetails, SetTokensDetails] = useState();
+  const [TokensDetails, SetTokensDetails] = useState([]);
   const [textureSelected, setTextureSelected] = useState();
-
+  const itemsPerPage = 7; // Number of items to display per page
+  const [currentPage, setCurrentPage] = useState(1);
+  const [loaded, setLoaded] = useState(false);
+  const [totalItems, setTotalItems] = useState(0);
 
   const controlsRef = useRef();
 
 
   const getProjects = async () => {
     setLoading(true);
-      const getp = await fetch('https://web3planet.bintfinance.org/projects', {
+      const getp = await fetch(`https://web3planet.bintfinance.org/projects?page=${currentPage}`, {
       method: 'GET',
           headers: {
               'Content-Type':'application/json',
@@ -104,13 +109,14 @@ export default function PlanetsPage({setLoading, loading}) {
 
           console.log(valueGotten, "checking");
 
-        SetTokensDetails(valueGotten);
+        SetTokensDetails(valueGotten.projects);
         setLoading(false)
+        setLoaded(true);
   }
 
 
   const moreInfo = async (data, textureto) => {
-    console.log(data);
+    //console.log(data);
     const updateClick = await fetch('https://web3planet.bintfinance.org/clicks', {
       method: 'POST',
       headers: {
@@ -120,24 +126,49 @@ export default function PlanetsPage({setLoading, loading}) {
           id: data._id
         }),
     });
-    console.log(updateClick);
+    //console.log(updateClick);
     setCurrentDetails(data);
     setOpenModal(true);
     setTextureSelected(textureto);
   }
 
 
+
+
+   // Function to fetch data from the server based on the current page number
+   const fetchPageData = async (page, limit) => {
+    try {
+      const response = await fetch(`https://web3planet.bintfinance.org/projects?page=${page}&limit=${limit}`);
+      const data = await response.json();
+      SetTokensDetails(data.projects);
+      setTotalItems(data.totalItems);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
+
+
+
+
+
+
   useEffect(() => {
+  
+  if(!loaded) {
+    getProjects();
+  } else {
+    fetchPageData(currentPage, itemsPerPage)
+  }
+ 
+  console.log("CALLING YOU AGAIIN")
 
-  console.log("Use effect calllgit ed")
-  getProjects();
-
-  }, [])
+  }, [currentPage])
 
   return (
     <div className='h-screen relative overflow-hidden'
     >
       <div className="relative h-screen z-20">
+        <Filter AllProjects={TokensDetails} moreInfo={moreInfo} planetsMap={planetsMap} setLoading={setLoading} SetTokensDetails={SetTokensDetails} />
        <Maincanvas 
         TokensDetails={TokensDetails}
         holdCam={holdCam}
@@ -149,6 +180,14 @@ export default function PlanetsPage({setLoading, loading}) {
         loading={loading}
         setLoading={setLoading}
        />
+       <Paginationbutton
+          totalItems={totalItems}
+          itemsPerPage={itemsPerPage} 
+          currentPage={currentPage} 
+          setCurrentPage={setCurrentPage}
+          getProjects={getProjects}
+          />
+
       </div>
         {/* Render the modal when showModal is true */}
       <div className="relative h-screen p-20 flex justify-center items-center">

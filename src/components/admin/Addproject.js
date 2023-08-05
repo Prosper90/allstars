@@ -23,8 +23,10 @@ const [tokenName, setTokenName] = useState();
 const [rings, setRings] = useState(false);
 const [approve, setApprove] = useState(false);
 const [planetname, setPlanetName] = useState();
+const [projectType, setProjectType] = useState();
 
 const [isModalOpen, setIsModalOpen] = useState(false);
+
 
 const handleOpenModal = () => {
   setIsModalOpen(true);
@@ -50,8 +52,8 @@ const handleCloseModal = () => {
 
   const submitData = async (e) => {
     e.preventDefault();
-    //setLoading(true);
-    /*
+    setLoading(true);
+    
 
     const check = fileFilter(e.target.files[0]);
     if(!check) {
@@ -80,19 +82,18 @@ const handleCloseModal = () => {
     formdata.append("approved", approve);
     formdata.append("planetname", planetname);
     formdata.append("img_url", img_url);
-
+    formdata.append("planetType", projectType)
   
     console.log(formdata, "formdata check");
-    */
+    
     
     try {
-      /*
+      
       const upload = await fetch('https://web3planet.bintfinance.org/project/admin', {
         method: 'POST',
         body: formdata,
       });
-      */
-      const upload = false;
+      
       console.log(upload, setNotifyType, "upload");
       if(!upload) {
         console.log("called Notifier");
@@ -132,6 +133,8 @@ const handleCloseModal = () => {
           submitData={submitData}
           planetname={planetname}
           setPlanetName={setPlanetName}
+          projectType={projectType}
+          setProjectType={setProjectType}
           />
       )}
       <div className='w-100'>

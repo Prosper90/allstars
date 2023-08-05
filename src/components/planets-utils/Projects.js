@@ -9,7 +9,7 @@ function Projects({ details }) {
 
         <div className="flex justify-between items-start p-2 w-[100%] h-[] bg--700 mb-1">
           <img src={details.img_url} alt='img-logo' className='rounded w-28 h-28' />
-          <button className=' cursor-pointer p-[7px] rounded-md w-20 bg-gradient-to-tl border border-white from-purple-700 to-pink-500 hover:shadow-soft-2xl hover:scale-102 text-sm text-white'>Vote</button>
+          <button className=' cursor-pointer p-[7px] rounded-md w-20 bg-transparent border border-white hover:bg-white hover:text-[#000] hover:shadow-soft-2xl hover:scale-102 text-sm text-white'>Vote</button>
         </div>
 
         <div className="flex  gap-2 text-white  flex-nowrap items-start  py-2  pr-6 w-100 overflow-x-auto">
@@ -51,7 +51,7 @@ function Projects({ details }) {
         </div>
 
         <h3 className='font-bold text-[#fff] mt-4'>Overview</h3>
-        <div className="bg-purple-700 shadow-sm p-4 text-white rounded-[10px] font-thin overflow-y-auto h-[200px]">
+        <div className="bg-[#eeeade1f] shadow-sm p-4 text-[#fff] rounded-[10px] font-thin overflow-y-auto h-[200px]">
           {details.tokenDescription}
         </div>
 

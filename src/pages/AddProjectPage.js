@@ -3,6 +3,7 @@ import { Stars } from '../components/planets-utils/maincanvas'
 import { Canvas } from '@react-three/fiber'
 import { Link } from 'react-router-dom'
 import Notifier from '../components/component-utils/Notifier'
+import Miniloader from '../components/component-utils/Miniloader'
 
 export default function AddProjectPage({setLoading, loading, notify, notifyType, notifyMsg, setNotify, setNotifyType, setNotifyMsg}) {
   const [formSwitch, setFormSwitch] = useState(0)
@@ -47,36 +48,75 @@ const [twitter, setTwitter] = useState('');
 const [contract_address, setContract_address] = useState('');
 const [audit, setAudit] = useState('');
 const [tokenName, setTokenName] = useState();
+const [projectType, setProjectType] = useState();
 
   const increment = () => setCounter(counter + 1 );
   const decrement = () => setCounter(counter - 1 );
 
 //filter files
-  const fileFilter = (file) => {
-    // Reject a file 
-    if (file.type === 'image/jpeg' || file.type === 'image/png') {
-        return true;
-    } else {
-        return false;
+const fileFilter = (file) => {
+  // Check file type
+  if (file.type === 'image/jpeg' || file.type === 'image/png') {
+    // Check file size
+    if (file.size < 1000) {
+      return false;
     }
-  };
+    
+    // Create an image object
+    const img = new Image();
+    
+    // Read the file using the FileReader API
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = function(e) {
+      img.src = e.target.result;
+      
+      // Check image dimensions
+      img.onload = function() {
+        if (img.width === 500 && img.height === 500) {
+          // Accept the file if it meets the criteria
+          return true;
+        } else {
+          // Reject the file if dimensions are not 500x500
+          return false;
+        }
+      };
+    };
+  }
 
-    const handleFileChange = (e) => {
-    //setSelectedFile(e.target.files[0]);
-    console.log("in here", e.target.name, e.target.value)
-  // setFormData({ ...formData, [e.target.name]: e.target.files[0] });
-  /*
-   if(e.target.files[0]) {
-    setFormData({ ...formData, [e.target.name]: e.target.files[0] });
-   } else {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-   }
-*/
+  // Reject the file if it doesn't match the criteria
+  return false;
+};
+
+
+
+  const handleFileChange = (e) => {
+    
+    const check = fileFilter(e.target.files[0]);
+    if(!check) {
+      setNotify(true);
+      setNotifyType("warn");
+      setNotifyMsg("Image must be png or jpg and must be 500x500 in size");
+      return ;
+    }
+
+    setImg_url(e.target.files[0]);
+  
   };
 
 const submitData = async (e) => {
   e.preventDefault();
   setLoading(true);
+  
+  const checker = tokenName == "" ? "token name Empty" : tokenDescription == "" ? "token description empty" : unique == "" ? "Unique details are empty" : extraDetails == "" ? "Extra details are empty" : upcomingPlans == "" ? "No data for upcoming plans" : launchPlans == "" ? "Launchplans shouldnt be empty" : chain == "" ? "Add an active chain" : img_url == "" ? "Project logo must be submitted" : tg == "" ? "Your tg must be avaialble" : projectType == "" && "Add a type your project falls into";
+  if(checker) {
+    setNotify(true);
+    setNotifyType("warn");
+    setNotifyMsg(`${checker}`);
+    return;
+  }
+  setLoading(true);
+
   console.log(img_url, "checking state");
   console.log("check Running");
   const formdata = new FormData();
@@ -95,6 +135,7 @@ const submitData = async (e) => {
   formdata.append("twitter", twitter)
   formdata.append("contract_address", contract_address)
   formdata.append("audit", audit);
+  formdata.append("projectType", projectType)
 
   console.log(formdata, "formdata check");
   
@@ -114,10 +155,38 @@ const submitData = async (e) => {
       setNotifyType("success");
       setNotifyMsg("Data Recieved and Would be Reviewed");
     }
-    setLoading(false);
+    //setLoading(false);
   } catch (error) {
     console.error(error);
+    setNotify(true);
+    setNotifyType("warning");
+    setNotifyMsg("Something went wrong, Please try Again");
   }
+  
+}
+
+
+
+const switching = (index) => {
+ 
+  const checkerOne = tokenName == "" ? "token name Empty" : tokenDescription == "" ? "token description empty" : chain == "" ? "Add an active chain" : projectType == "" && "Add a type your project falls into" ;
+  const checkerTwo = unique == "" ? "Unique details are empty" : extraDetails == "" ? "Extra details are empty" : upcomingPlans == "" && "No data for upcoming plans" ; 
+  const checkerThree =  launchPlans == "" && "Launchplans shouldnt be empty" ;
+  const checkerFour = tg == "" && "Your Telegram community must be submitted";
+  const checkerFive =  img_url == "" ? "Project logo must be submitted" : contract_address == "" && "Your contract address must be avaialble" ;
+  
+  const passedValue = index == 1 ? checkerOne : index === 2 ? checkerTwo : index == 3 ? checkerThree : index == 4 ? checkerFour : index == 5 && checkerFive ;
+
+  if( passedValue ) {
+    setNotify(true);
+    setNotifyType("warn");
+    setNotifyMsg(`${passedValue}`);
+    return;
+  }
+  
+
+  setFormSwitch(index);
+  increment();
 }
 
 
@@ -169,9 +238,34 @@ useEffect(() => {
          className=" flex justify-center flex-col  items-center gap-6 absolute top-0 md:w-full h-[100dvh]" style={{ height: "100vh" }}
          onSubmit={(e) => submitData(e)}
         >
-      <div className="absolute text-lg top-16 bg-gradient-to-tl border-b border-white from-purple-700 to-pink-500 px-8 py-2 rounded-md font-medium text-white  right-10">{counter}/5</div>
+      <div className="absolute text-lg top-16 border-b border-white bg-white px-8 py-2 rounded-md font-medium text-[#000]  right-10">{counter}/5</div>
+
         {/* <h1 className='text-white font-bold text-3xl md:text-4xl'>ALL-STARS INTRODUCES YOU TO THE ALL-STARSVERSE</h1> */}
         <div className={`md:w-2/5 grid md:grid-cols-1 p-5 py-14 md:px-16 gap-8 rounded-md ${formSwitch === 0 ? "grid" : "hidden"}`}>
+
+        <div className="bg-[00ff00]">
+            <label className="font-medium text-white text-lg md:text-xl mb-2" htmlFor="">
+              Project type
+            </label>
+            <select
+              className="block appearance-none w-full py-2 pl-3 pr-10 text-white leading-tight bg-[#000] border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
+              value={projectType}
+              onChange={(e) => setProjectType(e.target.value)}
+            >
+              <option className="bg-transparent" disabled selected>
+                Project Type
+              </option>
+              <option style={{ color: 'white' }}>Utility</option>
+              <option style={{ color: 'white' }}>Meme</option>
+              <option style={{ color: 'white' }}>Game</option>
+              <option style={{ color: 'white' }}>Porn</option>
+              <option style={{ color: 'white' }}>Entertainment</option>
+              <option style={{ color: 'white' }}>Finance</option>
+              <option style={{ color: 'white' }}>Staking</option>
+              <option style={{ color: 'white' }}>Tools</option>
+            </select>
+         </div>
+
           <div className="bg-[00ff00]">
             <label className='font-medium text-white text-lg md:text-xl' htmlFor="">WHAT IS YOUR PROJECTS NAME</label>
             <input className='bg-transparent  border outline-none rounded-md w-full  p-2 text-white px-4 mt-3' type="text" placeholder='Enter project name here' 
@@ -196,10 +290,9 @@ useEffect(() => {
             <Link to="/"
               className='bg-transparent border-white border px-8 py-2 rounded-md font-medium text-white text-lg md:text-xl ' >Back</Link>
             <div onClick={()  => {
-              increment()
-            setFormSwitch(1)}
+              switching(1)}
               }
-              className=' bg-gradient-to-tl border border-white from-purple-700 to-pink-500 px-8 py-2 rounded-md font-medium text-white text-lg md:text-xl ' >Next 🚀</div>
+              className=' border border-white bg-white px-8 py-2 rounded-md font-medium text-[#000] text-lg md:text-xl cursor-pointer ' >Next 🚀</div>
           </div>
 
         </div>
@@ -223,10 +316,9 @@ useEffect(() => {
               decrement()
               setFormSwitch(0)}}
               className='bg-transparent border-white border px-8 py-2 rounded-md font-medium text-white text-lg md:text-xl ' >Back</div>
-            <div onClick={() =>{ setFormSwitch(2)
-            increment()
+            <div onClick={() =>{ switching(2)
             }}
-              className=' bg-gradient-to-tl border border-white from-purple-700 to-pink-500 px-8 py-2 rounded-md font-medium text-white text-lg md:text-xl ' >Next 🚀</div>
+              className=' border border-white bg-white px-8 py-2 rounded-md font-medium text-[#000] text-lg md:text-xl cursor-pointer ' >Next 🚀</div>
           </div>
 
         </div>
@@ -256,9 +348,8 @@ useEffect(() => {
               setFormSwitch(1)}}
               className='bg-transparent border-white border px-8 py-2 rounded-md font-medium text-white text-lg md:text-xl ' >Back</div>
             <div onClick={() =>{
-              increment()
-               setFormSwitch(3)}}
-              className=' bg-gradient-to-tl border border-white from-purple-700 to-pink-500 px-8 py-2 rounded-md font-medium text-white text-lg md:text-xl ' >Next 🚀</div>
+              switching(3)}}
+              className=' border border-white bg-white px-8 py-2 rounded-md font-medium text-[#000] text-lg md:text-xl cursor-pointer ' >Next 🚀</div>
           </div>
 
         </div>
@@ -299,10 +390,9 @@ useEffect(() => {
               decrement()
              setFormSwitch(2)}}
               className='bg-transparent border-white border px-8 py-2 rounded-md font-medium text-white text-lg md:text-xl ' >Back</div>
-            <div onClick={() => {setFormSwitch(4)
-            increment()
+            <div onClick={() => {switching(4)
             }}
-              className=' bg-gradient-to-tl border border-white from-purple-700 to-pink-500 px-8 py-2 rounded-md font-medium text-white text-lg md:text-xl ' >Next 🚀</div>
+              className=' border border-white bg-white px-8 py-2 rounded-md font-medium text-[#000] text-lg md:text-xl cursor-pointer' >Next 🚀</div>
           </div>
 
         </div>
@@ -330,7 +420,7 @@ useEffect(() => {
 
           <div className="">
             <label className='font-medium text-white text-lg md:text-xl' htmlFor="">Project Logo</label>
-            <input onChange={(e) => setImg_url(e.target.files[0])} className='bg-transparent border outline-none rounded-md w-full  p-2 text-white px-4 mt-3' type="file" placeholder='Enter audit' 
+            <input onChange={(e) => handleFileChange(e)} className='bg-transparent border outline-none rounded-md w-full  p-2 text-white px-4 mt-3' type="file" placeholder='Enter audit' 
              name='img_url'
              defaultValue={img_url}
             />
@@ -342,7 +432,7 @@ useEffect(() => {
               setFormSwitch(3)}}
               className='bg-transparent border-white border px-8 py-2 rounded-md font-medium text-white text-lg md:text-xl ' >Back</div>
             <button
-              className=' bg-gradient-to-tl border border-white from-purple-700 to-pink-500 px-8 py-2 rounded-md font-medium text-white text-lg md:text-xl ' type="submit"  >Submit 🚀</button>
+              className='border border-white bg-white  cursor-pointer px-8 py-2 rounded-md font-medium text-[#000] text-lg md:text-xl ' type="submit"  >  {loading ? <Miniloader loading={loading} /> : "Submit 🚀" }</button>
           </div>
 
         </div>

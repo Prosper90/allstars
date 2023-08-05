@@ -20,6 +20,7 @@ import { OrbitControls, PerspectiveCamera } from "@react-three/drei";
 import ZoomCursorControls from "./ZoomCursorControls"
 import { useTexture } from "@react-three/drei";
 import Preloader from '../component-utils/Preloader';
+import Filter from './Filter';
 
 
         //TokensDetails={TokensDetails}
@@ -45,6 +46,7 @@ export function Maincanvas({ setLoading, loading, setCam, setGetScene, TokensDet
            //onWheel={handleWheel}
         >
           {/* <MyCameraReactsToStateChanges setCam={setCam} setGetScene={setGetScene} /> */}
+
           <PerspectiveCamera makeDefault position={[50, 200, 50]} fov={60} aspect={window.innerWidth / window.innerHeight} />
           <ambientLight />
           <Stars />
@@ -55,29 +57,39 @@ export function Maincanvas({ setLoading, loading, setCam, setGetScene, TokensDet
             penumbra={1}
             castShadow
           />
-         {TokensDetails?.map((data, index) => {
+          {
+            TokensDetails.length !== 0 ?
+           
+            <mesh>
+                {TokensDetails?.map((data, index) => {
 
-          const x = index + 1.5
-         
-          const space = [x * 7, 0, 20];
-          const getTexture = planetsMap.find(planet => planet.name === data.planet_name)
-          console.log(data.planet_name, getTexture);
-          
-          if(data.approved) {
-            return(
-              <Planets
-                index={index}
-                key={index}
-                distance={27 * x}
-                speed={0.05}
-                texture={getTexture.image}
-                moreInfo={moreInfo}
-                data={data}
-              />
-            )
+                    const x = index + 1.5
+
+                    const space = [x * 7, 0, 20];
+                    const getTexture = planetsMap.find(planet => planet.name === data.planet_name)
+                    console.log(data.planet_name, getTexture);
+
+                    if(data.approved) {
+                      return(
+                        <Planets
+                          index={index}
+                          key={index}
+                          distance={27 * x}
+                          speed={0.05}
+                          texture={getTexture.image}
+                          moreInfo={moreInfo}
+                          data={data}
+                        />
+                      )
+                    }
+
+                })}
+            </mesh>
+           :
+
+           <mesh className="">Empty</mesh>
           }
-
-         })}
+         
 
           {/*<OrbitControls ref={controlsRef}  />*/}
           <ZoomCursorControls ref={controlsRef} />

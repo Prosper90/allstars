@@ -1,6 +1,6 @@
 import React, {useEffect, useRef} from 'react'
 
-function Addapprove({ onClose, setImg_url, img_url, setApprove, approve, setRings, rings, submitData, planetname, setPlanetName  }) {
+function Addapprove({ onClose, setImg_url, img_url, setApprove, approve, setRings, rings, submitData, planetname, setPlanetName, projectType, setProjectType  }) {
 
     const modalRef = useRef(null);
 
@@ -46,6 +46,20 @@ function Addapprove({ onClose, setImg_url, img_url, setApprove, approve, setRing
                 <path d="M7 7l3-3 3 3M7 13l3 3 3-3" />
               </svg>
             </div>
+        </div>
+
+        <div className="">
+           <select class="block appearance-none w-full py-2 pl-3 pr-10 leading-tight bg-white border border-gray-300 rounded-md focus:outline-none focus:border-blue-500" value={projectType} onChange={(e) => setProjectType(e.target.value)}>
+                <option>Project Type</option>
+                <option>Utility</option>
+                <option>Meme</option>
+                <option>Game</option>
+                <option>Porn</option>
+                <option>Entertainment</option>
+                <option>Finance</option>
+                <option>Staking</option>
+                <option>Tools</option>
+            </select>
         </div>
         {/*  drop down to select planet type */}
          <div class="flex gap-3">

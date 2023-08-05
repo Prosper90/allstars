@@ -11,8 +11,14 @@ export default function Planets({ distance, speed, index, texture, moreInfo, dat
 
 
 
-  const terrainTexture = useTexture(texture);
+  //const terrainTexture = useTexture(texture);
   const [isHovered, setIsHovered] = useState(false);
+  const circleMaterial = new THREE.MeshBasicMaterial({
+    color: 0xffffff,
+    transparent: true,
+    opacity: 0.1,
+    wireframe: true,
+  });
 
   const planetRef = useRef();
   const initialAngle = useMemo(() => Math.random() * Math.PI * 2, []);
@@ -66,11 +72,12 @@ export default function Planets({ distance, speed, index, texture, moreInfo, dat
         onPointerOver={handleHover}
         onPointerOut={handleUnhover}
         onClick={() => moreInfo(data, texture)}
-
+        className="cursor-pointer"
     >
       <mesh>
         <sphereGeometry args={[3, 50, 50]} />
-        <meshStandardMaterial map={terrainTexture} />
+        {/*<meshStandardMaterial map={terrainTexture} />*/}
+        <lineBasicMaterial color={0xffffff} transparent opacity={0.1} linewidth={4} />
       </mesh>
        {/* <UseDynamicTexture imageUrl={data.planet_url} /> */}
 

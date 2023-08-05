@@ -29,7 +29,7 @@ const UseDynamicTexture = ({imageUrl}) => {
     fetchImage();
   }, [imageUrl]);
 
-  const terrainTexture = useTexture('/earthmap.jpg');
+  const terrainTexture = useTexture(imageUrl === "eearth ? '/earthmap.jpg'");
   //const terrainTexture = useLoader(THREE.TextureLoader, imageDataUrl);
   //const terrainTexture = new THREE.TextureLoader().load(imageDataUrl);
 
